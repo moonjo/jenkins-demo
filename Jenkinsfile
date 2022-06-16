@@ -4,7 +4,7 @@ pipeline {
     agent any
     parameters {
         choice(name: 'VERSION', choices: ['1.1.0', '1.2.0', '1.3.0'], description: '')
-        booleanParam(name: 'RUNTESTS', defaultValue: true, description: '')
+        booleanParam(name: 'RUN_TESTS', defaultValue: true, description: '')
     }
     stages {
         
@@ -23,6 +23,11 @@ pipeline {
             }
         }
         stage('Test') {
+            when {
+                expression {
+                    params.RUN_TESTS
+                }
+            }
             steps {
                 script {
                     gv.testApp()
