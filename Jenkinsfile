@@ -1,25 +1,39 @@
+def gv
+
 pipeline {
     agent any
-
+    paramters {
+        choice(name: 'VERSION', choices: ['1.1.0', '1.2.0', '1.3.0'], description: '')
+        booleanParam(name: 'RUNTESTS', defaultValue: true, description: '')
+    }
     stages {
-        stage('Hello') {
+        
+        stage('Init') {
             steps {
-                echo 'Hello World'
+                script {
+                    gv = load "myscript.groovy"
+                }
             }
         }
         stage('Build') {
             steps {
-                echo 'Building'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying'
+                script {
+                    gv.buildApp()
+                }
             }
         }
         stage('Test') {
             steps {
-                echo 'Testing'
+                script {
+                    gv.testApp()
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                script {
+                    gv.deployApp()
+                }
             }
         }
         stage('Release') {
